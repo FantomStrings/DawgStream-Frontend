@@ -27,16 +27,16 @@ const libraryPages: NavItemType = {
       children: [
         {
           id: 'add-book',
-          title: <FormattedMessage id="add book" />,
+          title: <FormattedMessage id="add-book" />,
           type: 'item',
-          url: '/library/add',
+          url: '/library/add/send',
           icon: icons.SendIcon
         },
         {
           id: 'view-books',
-          title: <FormattedMessage id="view books" />,
+          title: <FormattedMessage id="view-books" />,
           type: 'item',
-          url: '/library/get',
+          url: '/library/get/list',
           icon: icons.EmailIcon
         }
       ]
