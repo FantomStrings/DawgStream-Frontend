@@ -13,31 +13,32 @@ import { Divider, List } from '@mui/material';
 
 // project import
 import axios from 'utils/axios';
-import { IMessage } from 'types/message';
 import PrioritySelector from 'components/PrioritySelector';
-import { NoMessage, MessageListItem } from 'components/MessageListItem';
+import { NoMessage, MessageListItem, BookListItem } from 'components/MessageListItem';
+import { IBook } from 'types/book';
 
 const defaultTheme = createTheme();
 
 export default function MessagesList() {
-  const [messages, setMessages] = React.useState<IMessage[]>([]);
+  const [Books, setBooks] = React.useState<IBook[]>([]);
   const [priority, setPriority] = React.useState(0);
 
   React.useEffect(() => {
     axios
-      .get('c/message/offset?limit=50&offset=0')
+      //.get('c/message/offset?limit=50&offset=0')
+      .get('/library/retrieve')
       .then((response) => {
-        setMessages(response.data.entries);
+        setBooks(response.data.entries);
         // console.dir(response.data);
       })
       .catch((error) => console.error(error));
   }, []);
 
-  const handleDelete = (name: string) => {
+  const handleDelete = (isbn13: number) => {
     axios
-      .delete('c/message/' + name)
+      .delete('/library/remove/ISBN/' + isbn13)
       .then((response) => {
-        response.status == 200 && setMessages(messages.filter((msg) => msg.name !== name));
+        response.status == 200 && setBooks(Books.filter((Book) => Book.isbn13 !== isbn13));
         // console.dir(response.status);
       })
       .catch((error) => console.error(error));
@@ -45,11 +46,11 @@ export default function MessagesList() {
 
   const handlePriorityClick = (event: React.MouseEvent<HTMLElement>, newPriority: number) => setPriority(newPriority ?? 0);
 
-  const messagesAsComponents = messages
-    .filter((msg) => priority == 0 || priority == msg.priority)
-    .map((msg, index, messages) => (
+  const booksAsComponents = Books
+    .filter((Book) => Book.isbn13 < 5000000000000)
+    .map((Book, index, messages) => (
       <React.Fragment key={'msg list item: ' + index}>
-        <MessageListItem message={msg} onDelete={handleDelete} />
+        <BookListItem book={Book} onDelete={handleDelete} />
         {index < messages.length - 1 && <Divider variant="middle" component="li" />}
       </React.Fragment>
     ));
@@ -74,7 +75,7 @@ export default function MessagesList() {
           </Typography>
           <PrioritySelector initialValue={priority} onClick={handlePriorityClick} />
           <Box sx={{ mt: 1 }}>
-            <List>{messagesAsComponents.length ? messagesAsComponents : <NoMessage />}</List>
+            <List>{booksAsComponents.length ? booksAsComponents : <NoMessage />}</List>
           </Box>
         </Box>
       </Container>

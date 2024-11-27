@@ -4,6 +4,7 @@ import { IconButton, ListItem, ListItemAvatar, ListItemText } from '@mui/materia
 
 // project import
 import { IMessage } from 'types/message';
+import { IBook } from 'types/book';
 import PriorityAvatar from 'components/Priority';
 
 export function MessageListItem({ message, onDelete }: { message: IMessage; onDelete: (name: string) => void }) {
@@ -22,7 +23,18 @@ export function MessageListItem({ message, onDelete }: { message: IMessage; onDe
     </ListItem>
   );
 }
-
+export function BookListItem({ book, onDelete }: { book: IBook; onDelete: (isbn13: number) => void }) {
+  return (
+    <ListItem
+      secondaryAction={
+        <IconButton edge="end" aria-label="delete" onClick={() => onDelete(book.isbn13)}>
+          <DeleteIcon />
+        </IconButton>
+      }
+    >
+    </ListItem>
+  );
+}
 export function NoMessage() {
   return (
     <ListItem>
