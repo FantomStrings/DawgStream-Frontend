@@ -66,7 +66,7 @@ export default function AuthRegister({ providers, csrfToken }: any) {
           firstname: '',
           lastname: '',
           email: '',
-          company: '',
+          phone: '',
           password: '',
           submit: null
         }}
@@ -74,12 +74,21 @@ export default function AuthRegister({ providers, csrfToken }: any) {
           firstname: Yup.string().max(255).required('First Name is required'),
           lastname: Yup.string().max(255).required('Last Name is required'),
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+          phone: Yup.string()
+            .matches(/^[0-9]{10}$/, 'Phone number must be exactly 10 digits') // Added validation for phone
+            .required('Phone number is required'),
           password: Yup.string()
             .required('Password is required')
             .test('no-leading-trailing-whitespace', 'Password cannot start or end with spaces', (value) => value === value.trim())
-            .max(10, 'Password must be less than 10 characters')
+            .min(8, 'Password must be at least 8 characters long') // Ensure minimum 8 characters
+            .matches(/[A-Z]/, 'Password must contain at least one uppercase letter') // Ensure at least one uppercase letter
+            .matches(/[a-z]/, 'Password must contain at least one lowercase letter') // Ensure at least one lowercase letter
+            .matches(/\d/, 'Password must contain at least one number') // Ensure at least one number
+            .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Password must contain at least one special character') // Ensure at least one special character
         })}
         onSubmit={async (values, { setErrors, setSubmitting }) => {
+          console.log('Form submitted');
+          console.log('Submitting values:', values);
           const trimmedEmail = values.email.trim();
           signIn('register', {
             redirect: false,
@@ -87,9 +96,10 @@ export default function AuthRegister({ providers, csrfToken }: any) {
             lastname: values.lastname,
             email: trimmedEmail,
             password: values.password,
-            company: values.company,
+            phone: values.phone,
             callbackUrl: APP_DEFAULT_PATH
           }).then((res: any) => {
+            console.log('Response:', res);
             if (res?.error) {
               setErrors({ submit: res.error });
               setSubmitting(false);
@@ -146,22 +156,22 @@ export default function AuthRegister({ providers, csrfToken }: any) {
               </Grid>
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="company-signup">Company</InputLabel>
+                  <InputLabel htmlFor="phone-signup">Phone Number*</InputLabel>
                   <OutlinedInput
                     fullWidth
-                    error={Boolean(touched.company && errors.company)}
-                    id="company-signup"
-                    value={values.company}
-                    name="company"
+                    error={Boolean(touched.phone && errors.phone)}
+                    id="phone-signup"
+                    value={values.phone}
+                    name="phone"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="Enter your company name"
+                    placeholder="Enter your Phone Number"
                     inputProps={{}}
                   />
                 </Stack>
-                {touched.company && errors.company && (
-                  <FormHelperText error id="helper-text-company-signup">
-                    {errors.company}
+                {touched.phone && errors.phone && (
+                  <FormHelperText error id="helper-text-phone-signup">
+                    {errors.phone}
                   </FormHelperText>
                 )}
               </Grid>
@@ -251,12 +261,12 @@ export default function AuthRegister({ providers, csrfToken }: any) {
               </Grid>
               {errors.submit && (
                 <Grid item xs={12}>
-                  <FormHelperText error>{errors.submit}</FormHelperText>
+                  <FormHelperText error> {errors.submit}</FormHelperText>
                 </Grid>
               )}
               <Grid item xs={12}>
                 <AnimateButton>
-                  <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
+                  <Button type="submit" disableElevation disabled={isSubmitting} fullWidth size="large" variant="contained" color="primary">
                     Create Account
                   </Button>
                 </AnimateButton>
