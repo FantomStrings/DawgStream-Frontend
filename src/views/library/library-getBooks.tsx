@@ -37,7 +37,7 @@ export default function MessagesList() {
 
   const handleDelete = (isbn13: number) => {
     axios
-      .delete('closed/books/' + isbn13)
+      .delete('/closed/books/isbn/' + isbn13)
       .then((response) => {
         response.status == 200 && setBooks(Books.filter((Book) => Book.isbn13 !== isbn13));
         // console.dir(response.status);
