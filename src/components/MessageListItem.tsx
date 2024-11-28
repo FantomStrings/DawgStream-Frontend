@@ -45,3 +45,13 @@ export function NoMessage() {
     </ListItem>
   );
 }
+export function NoBooks() {
+  return (
+    <ListItem>
+      <ListItemAvatar>
+        <CommentsDisabledIcon />
+      </ListItemAvatar>
+      <ListItemText primary="No Books" />
+    </ListItem>
+  );
+}

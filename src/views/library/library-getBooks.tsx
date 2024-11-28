@@ -14,29 +14,30 @@ import { Divider, List } from '@mui/material';
 // project import
 import axios from 'utils/axios';
 import PrioritySelector from 'components/PrioritySelector';
-import { NoMessage, MessageListItem, BookListItem } from 'components/MessageListItem';
+import { BookListItem, NoBooks } from 'components/MessageListItem';
 import { IBook } from 'types/book';
 
 const defaultTheme = createTheme();
 
 export default function MessagesList() {
   const [Books, setBooks] = React.useState<IBook[]>([]);
-  const [priority, setPriority] = React.useState(0);
+  //const [priority, setPriority] = React.useState(0);
 
   React.useEffect(() => {
     axios
       //.get('c/message/offset?limit=50&offset=0')
-      .get('/library/retrieve')
+      .get('closed/books/all')
       .then((response) => {
-        setBooks(response.data.entries);
-        // console.dir(response.data);
+        setBooks(response.data );
+        //console.dir(response.data);
+        console.dir(response)
       })
       .catch((error) => console.error(error));
   }, []);
 
   const handleDelete = (isbn13: number) => {
     axios
-      .delete('/library/remove/ISBN/' + isbn13)
+      .delete('closed/books/' + isbn13)
       .then((response) => {
         response.status == 200 && setBooks(Books.filter((Book) => Book.isbn13 !== isbn13));
         // console.dir(response.status);
@@ -44,17 +45,32 @@ export default function MessagesList() {
       .catch((error) => console.error(error));
   };
 
-  const handlePriorityClick = (event: React.MouseEvent<HTMLElement>, newPriority: number) => setPriority(newPriority ?? 0);
+  //const handlePriorityClick = (event: React.MouseEvent<HTMLElement>, newPriority: number) => setPriority(newPriority ?? 0);
 
   const booksAsComponents = Books
-    .filter((Book) => Book.isbn13 < 5000000000000)
-    .map((Book, index, messages) => (
-      <React.Fragment key={'msg list item: ' + index}>
-        <BookListItem book={Book} onDelete={handleDelete} />
-        {index < messages.length - 1 && <Divider variant="middle" component="li" />}
-      </React.Fragment>
-    ));
-
+    .filter((Book) => Book.isbn13 != null)
+    .map((Book, index, Books) => (
+    <React.Fragment key={'Book list item: ' + index}>
+    <Box display="flex" alignItems="center" p={2}>
+      {Book.image_small_url && (
+        <img
+          src={Book.image_small_url}
+          alt={Book.title}
+          style={{ width: 50, height: 75, marginRight: 16 }}
+        />
+      )}
+      <Box flexGrow={1}>
+        <Typography variant="h6">{Book.title}</Typography>
+        <Typography variant="body2" color="textSecondary">
+          {Book.authors}
+        </Typography>
+      </Box>
+      <BookListItem book={Book} onDelete={handleDelete} />
+        {index < Books.length - 1 && <Divider variant="middle" component="li" />}
+    </Box>
+    {index < Books.length - 1 && <Divider variant="middle" component="li" />}
+  </React.Fragment>
+  ));
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="md">
@@ -73,9 +89,9 @@ export default function MessagesList() {
           <Typography component="h1" variant="h5">
             Read Messages
           </Typography>
-          <PrioritySelector initialValue={priority} onClick={handlePriorityClick} />
+
           <Box sx={{ mt: 1 }}>
-            <List>{booksAsComponents.length ? booksAsComponents : <NoMessage />}</List>
+            <List>{booksAsComponents.length ? booksAsComponents : <NoBooks/>}</List>
           </Box>
         </Box>
       </Container>
