@@ -5,6 +5,7 @@ import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import EmailIcon from '@mui/icons-material/Email';
+import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -84,10 +85,10 @@ export default function MessagesList() {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <EmailIcon />
+            <MenuBookOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Read Messages
+            View books in the library system
           </Typography>
 
           <Box sx={{ mt: 1 }}>
