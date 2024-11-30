@@ -16,8 +16,6 @@ import SendMessage from 'sections/messages/message-forms/messageSend';
 import AddBook from 'sections/library/bookAdd';
 import { number } from 'yup';
 
-const defaultTheme = createTheme();
-
 interface IAlert {
   showAlert: boolean;
   alertMessage: string;
