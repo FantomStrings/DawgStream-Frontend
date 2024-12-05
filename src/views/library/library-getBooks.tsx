@@ -1,10 +1,10 @@
 'use client';
 
 import * as React from 'react';
+import Modal from '@mui/material/Modal';
 import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import EmailIcon from '@mui/icons-material/Email';
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 
 import Typography from '@mui/material/Typography';
@@ -14,24 +14,25 @@ import { Divider, List } from '@mui/material';
 
 // project import
 import axios from 'utils/axios';
-import PrioritySelector from 'components/PrioritySelector';
 import { BookListItem, NoBooks } from 'components/MessageListItem';
 import { IBook } from 'types/book';
 
 const defaultTheme = createTheme();
 
-export default function MessagesList() {
+export default function LibraryList() {
+  console.log("LibraryList component rendered");
   const [Books, setBooks] = React.useState<IBook[]>([]);
-  //const [priority, setPriority] = React.useState(0);
+  const [singleBook, setSingleBook] = React.useState<IBook | null>(null);
+  const [modalOpen, setModalOpen] = React.useState(false);
 
   React.useEffect(() => {
+    console.log("LibraryList useEffect called");
     axios
-      //.get('c/message/offset?limit=50&offset=0')
       .get('closed/books/all')
       .then((response) => {
-        setBooks(response.data );
-        //console.dir(response.data);
-        console.dir(response)
+        console.log("Fetched books:", response.data);
+        setBooks(response.data);
+        console.dir(response);
       })
       .catch((error) => console.error(error));
   }, []);
@@ -44,6 +45,17 @@ export default function MessagesList() {
         // console.dir(response.status);
       })
       .catch((error) => console.error(error));
+  };
+
+  const handleDisplaySingleBook = (isbn13: number) => {
+    axios
+      .get('/closed/books/' + isbn13)
+      .then((response) => {
+        response.status == 200 && setSingleBook(response.data);
+        setModalOpen(true);
+        console.dir(response);
+      })
+      .catch((error) => console.error(error));;
   };
 
   //const handlePriorityClick = (event: React.MouseEvent<HTMLElement>, newPriority: number) => setPriority(newPriority ?? 0);
@@ -66,7 +78,7 @@ export default function MessagesList() {
           {Book.authors}
         </Typography>
       </Box>
-      <BookListItem book={Book} onDelete={handleDelete} />
+      <BookListItem book={Book} onDelete={handleDelete} onView={handleDisplaySingleBook} />
         {index < Books.length - 1 && <Divider variant="middle" component="li" />}
     </Box>
     {index < Books.length - 1 && <Divider variant="middle" component="li" />}
@@ -95,6 +107,66 @@ export default function MessagesList() {
             <List>{booksAsComponents.length ? booksAsComponents : <NoBooks/>}</List>
           </Box>
         </Box>
+        {/* Modal for Single Book */}
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+            display: 'flex',
+            maxWidth: 800, // Set a maximum width for the modal
+            width: '90%', // Ensure responsiveness on smaller screens
+            flexDirection: { xs: 'column', md: 'row' }, // Column for small screens, row for larger
+            gap: 4, // Space between content and image
+          }}
+        >
+          {/* Book Information */}
+          <Box flex={1} display="flex" flexDirection="column" justifyContent="center">
+            <Typography variant="h6" sx={{ mb: 2 }}>
+             <strong>{singleBook?.title || "Loading..."}</strong>
+            </Typography>
+            {singleBook && (
+             <>
+            <Typography variant="body2" sx={{ mb: 1 }}>
+             <strong>Author:</strong> {singleBook.authors}
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 1 }}>
+             <strong>Published:</strong> {singleBook.publication_year}
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 1 }}>
+             <strong>ISBN-13:</strong> {singleBook.isbn13}
+           </Typography>
+           <Typography variant="body2" sx={{ mb: 1 }}>
+             <strong>Average Rating:</strong> {singleBook.rating_avg}
+           </Typography>
+            </>
+            )}
+          </Box>
+
+          {/* Book Image */}
+          <Box flex={1} display="flex" justifyContent="center" alignItems="center">
+             {singleBook?.image_url ? (
+             <img
+                src={singleBook.image_url}
+                alt={`${singleBook.title} cover`}
+                style={{
+                  maxWidth: '100%',
+                  height: 'auto',
+                  borderRadius: 8, // Optional: Add rounded corners for aesthetic
+                }}
+              />
+              ) : (
+            <Typography variant="body2">Loading image...</Typography>
+            )}
+          </Box>
+        </Box>
+      </Modal>
       </Container>
     </ThemeProvider>
   );

@@ -38,7 +38,7 @@ export const authOptions: NextAuthOptions = {
         firstname: { name: 'firstname', label: 'Firstname', type: 'text', placeholder: 'Enter Firstname' },
         lastname: { name: 'lastname', label: 'Lastname', type: 'text', placeholder: 'Enter Lastname' },
         email: { name: 'email', label: 'Email', type: 'email', placeholder: 'Enter Email' },
-        company: { name: 'company', label: 'Company', type: 'text', placeholder: 'Enter Company' },
+        phone: { name: 'phone', label: 'Phone', type: 'phone', placeholder: 'Enter Phone Number' },
         password: { name: 'password', label: 'Password', type: 'password', placeholder: 'Enter Password' }
       },
       async authorize(credentials) {
@@ -46,12 +46,11 @@ export const authOptions: NextAuthOptions = {
           const user = await axios.post('/register', {
             firstname: credentials?.firstname,
             lastname: credentials?.lastname,
-            company: credentials?.company,
             password: credentials?.password,
             email: credentials?.email,
             role: 1,
             username: credentials?.email,
-            phone: '728-238-2380'
+            phone: credentials?.phone
           });
 
           console.dir(user);
@@ -60,7 +59,6 @@ export const authOptions: NextAuthOptions = {
             return user.data.user;
           }
         } catch (e: any) {
-          console.dir(e);
           const errorMessage = e?.message || e?.response?.data?.message || 'Something went wrong!';
           throw new Error(errorMessage);
         }

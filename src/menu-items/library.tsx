@@ -1,4 +1,3 @@
-
 // third-party
 import { FormattedMessage } from 'react-intl';
 
@@ -15,29 +14,29 @@ const icons = { MessageOutlined, EmailIcon, SendIcon };
 
 // ==============================|| MENU ITEMS - PAGES ||============================== //
 
-const pages: NavItemType = {
+const libraryPages: NavItemType = {
   id: 'group-pages',
   title: <FormattedMessage id="pages" />,
   type: 'group',
   children: [
     {
-      id: 'messages',
-      title: <FormattedMessage id="messages" />,
+      id: 'library',
+      title: <FormattedMessage id="library" />,
       type: 'collapse',
       icon: icons.MessageOutlined,
       children: [
         {
-          id: 'send-message',
-          title: <FormattedMessage id="send-message" />,
+          id: 'add-book',
+          title: <FormattedMessage id="add-book" />,
           type: 'item',
-          url: '/messages/send',
+          url: '/library/add/send',
           icon: icons.SendIcon
         },
         {
-          id: 'view-messages',
-          title: <FormattedMessage id="view-messages" />,
+          id: 'view-books',
+          title: <FormattedMessage id="view-books" />,
           type: 'item',
-          url: '/messages/list',
+          url: '/library/get/list',
           icon: icons.EmailIcon
         }
       ]
@@ -45,4 +44,4 @@ const pages: NavItemType = {
   ]
 };
 
-export default pages;
+export default libraryPages;
