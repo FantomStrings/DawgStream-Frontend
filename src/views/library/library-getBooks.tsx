@@ -1,7 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import Modal from '@mui/material/Modal';
 import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -16,6 +15,7 @@ import { Divider, List } from '@mui/material';
 import axios from 'utils/axios';
 import { BookListItem, NoBooks } from 'components/MessageListItem';
 import { IBook } from 'types/book';
+import BookModal from 'components/ModalSingleBook';
 
 const defaultTheme = createTheme();
 
@@ -47,6 +47,54 @@ export default function LibraryList() {
       .catch((error) => console.error(error));
   };
 
+  const handleAddRating = (id: number, rating: number) => {
+    if (rating < 1 || rating > 5) {
+      console.error('Invalid rating. Please provide a rating between 1 and 5.');
+      return;
+    }
+  
+    axios
+      .put('/closed/books/rating', { id, rating })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log('Rating added successfully:', response.data);
+  
+          // Update the book list with the new rating data
+          const updatedBooks = Books.map((book) =>
+            book.id === id ? { ...book, ...response.data[0] } : book
+          );
+          setBooks(updatedBooks);
+  
+          console.log('Updated book list:', updatedBooks);
+        }
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const handleDeleteRating = (bookId: number, rating: number) => {
+    axios
+      .delete('/closed/books/rating', {
+        data: {
+          id: bookId,
+          rating: rating,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log("Rating deleted successfully:", response.data);
+  
+          // update the book list with the new rating data
+          const updatedBooks = Books.map((book) =>
+            book.id === bookId ? { ...book, ...response.data[0] } : book
+          );
+          setBooks(updatedBooks);
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to delete rating:", error);
+      });
+  };
+
   const handleDisplaySingleBook = (isbn13: number) => {
     axios
       .get('/closed/books/' + isbn13)
@@ -54,10 +102,12 @@ export default function LibraryList() {
         response.status == 200 && setSingleBook(response.data);
         setModalOpen(true);
         console.dir(response);
+        // console.dir(response.status);
       })
-      .catch((error) => console.error(error));;
+      .catch((error) => console.error(error));
   };
 
+  //const [priority, setPriority] = React.useState(1);
   //const handlePriorityClick = (event: React.MouseEvent<HTMLElement>, newPriority: number) => setPriority(newPriority ?? 0);
 
   const booksAsComponents = Books
@@ -108,65 +158,13 @@ export default function LibraryList() {
           </Box>
         </Box>
         {/* Modal for Single Book */}
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            bgcolor: 'background.paper',
-            border: '2px solid #000',
-            boxShadow: 24,
-            p: 4,
-            display: 'flex',
-            maxWidth: 800, // Set a maximum width for the modal
-            width: '90%', // Ensure responsiveness on smaller screens
-            flexDirection: { xs: 'column', md: 'row' }, // Column for small screens, row for larger
-            gap: 4, // Space between content and image
-          }}
-        >
-          {/* Book Information */}
-          <Box flex={1} display="flex" flexDirection="column" justifyContent="center">
-            <Typography variant="h6" sx={{ mb: 2 }}>
-             <strong>{singleBook?.title || "Loading..."}</strong>
-            </Typography>
-            {singleBook && (
-             <>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-             <strong>Author:</strong> {singleBook.authors}
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-             <strong>Published:</strong> {singleBook.publication_year}
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-             <strong>ISBN-13:</strong> {singleBook.isbn13}
-           </Typography>
-           <Typography variant="body2" sx={{ mb: 1 }}>
-             <strong>Average Rating:</strong> {singleBook.rating_avg}
-           </Typography>
-            </>
-            )}
-          </Box>
-
-          {/* Book Image */}
-          <Box flex={1} display="flex" justifyContent="center" alignItems="center">
-             {singleBook?.image_url ? (
-             <img
-                src={singleBook.image_url}
-                alt={`${singleBook.title} cover`}
-                style={{
-                  maxWidth: '100%',
-                  height: 'auto',
-                  borderRadius: 8, // Optional: Add rounded corners for aesthetic
-                }}
-              />
-              ) : (
-            <Typography variant="body2">Loading image...</Typography>
-            )}
-          </Box>
-        </Box>
-      </Modal>
+        <BookModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        book={singleBook}
+        onSubmitRating={handleAddRating}
+        onUndoRating={handleDeleteRating}
+      />
       </Container>
     </ThemeProvider>
   );
