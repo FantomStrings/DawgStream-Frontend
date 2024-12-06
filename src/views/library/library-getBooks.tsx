@@ -8,17 +8,19 @@ import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Divider, List, TextField, ToggleButton, ToggleButtonGroup, Button } from '@mui/material';
+import { Divider, List, TextField, Button, Select, MenuItem, InputLabel, FormControl} from '@mui/material';
 import axios from 'utils/axios';
 import { BookListItem, NoBooks } from 'components/MessageListItem';
 import { IBook } from 'types/book';
 
 const defaultTheme = createTheme();
 
+type SearchFilter = 'author' | 'year' | 'isbn' | 'title';
+
 export default function MessagesList() {
   const [Books, setBooks] = React.useState<IBook[]>([]);
   const [searchQuery, setSearchQuery] = React.useState('');
-  const [searchFilter, setSearchFilter] = React.useState<'author' | 'year'>('author');
+  const [searchFilter, setSearchFilter] = React.useState<SearchFilter>('author');
   const [page, setPage] = React.useState(1);
   const [hasMoreBooks, setHasMoreBooks] = React.useState(true);
 
@@ -45,14 +47,30 @@ export default function MessagesList() {
             setHasMoreBooks(false);
           }
         } else {
-          // If there is a search query, fetch once based on the filter
-          const endpoint =
-            searchFilter === 'author'
-              ? `closed/books/author/${searchQuery}`
-              : `closed/books/year/${searchQuery}`;
+          
+          let endpoint: string;
+
+          switch(searchFilter) {
+            case 'author':
+              endpoint = `closed/books/author/${searchQuery}`;
+              break;
+            case 'year':
+              endpoint = `closed/books/year/${searchQuery}`;
+              break;
+            case 'isbn':
+              endpoint = `closed/books/${searchQuery}`;
+              break;
+            case 'title':
+              endpoint = `closed/books/title/${searchQuery}`;
+              break;
+            default:
+              endpoint = `closed/books/author/${searchQuery}`;
+          }
 
           const response = await axios.get(endpoint);
-          setBooks(response.data);
+          const data = response.data;
+
+          setBooks(Array.isArray(data) ? data : [data]);
           // No pagination in search mode, so mark hasMoreBooks as false
           setHasMoreBooks(false);
         }
@@ -113,7 +131,6 @@ export default function MessagesList() {
             gap: 1,
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, maxWidth: 500 }}>
             <TextField
               variant="outlined"
               placeholder="Search books..."
@@ -125,20 +142,20 @@ export default function MessagesList() {
                 maxWidth: 400,
               }}
             />
-          </Box>
-          <ToggleButtonGroup
-            value={searchFilter}
-            exclusive
-            onChange={(_, value) => value && setSearchFilter(value)}
-            aria-label="search filter"
-          >
-            <ToggleButton value="author" aria-label="author">
-              Author
-            </ToggleButton>
-            <ToggleButton value="year" aria-label="year">
-              Year
-            </ToggleButton>
-          </ToggleButtonGroup>
+          <FormControl variant='outlined' size='small' sx={{minWidth: 120}}>
+            <InputLabel id = 'search-filter-label'> Filter </InputLabel>
+            <Select 
+              labelId='search-filter-label'
+              value={searchFilter}
+              onChange={(e) => setSearchFilter(e.target.value as SearchFilter)}
+              label = 'Filter'
+              >
+                <MenuItem value= 'author'> Author </MenuItem>
+                <MenuItem value= 'year'> Year </MenuItem>
+                <MenuItem value= 'isbn'> ISBN </MenuItem>
+                <MenuItem value= 'title'> Title </MenuItem>
+              </Select>
+          </FormControl>
         </Box>
         <Box
           sx={{
