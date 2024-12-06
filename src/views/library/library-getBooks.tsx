@@ -103,17 +103,17 @@ export default function MessagesList() {
         <CssBaseline />
         <Box
           sx={{
+            position: 'fixed',
+            top: 70,
+            right: 25,
+            zIndex: 999,
+            backgroundColor: (theme) => theme.palette.background.default,
+            py: 2,
             display: 'flex',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            position: 'absolute',
-            mt: 2,
-            mb: 2,
-            width: '100%',
             gap: 1,
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, maxWidth: 400, flex: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, maxWidth: 500 }}>
             <TextField
               variant="outlined"
               placeholder="Search books..."
