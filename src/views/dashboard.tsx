@@ -9,7 +9,7 @@ import MainCard from 'components/MainCard';
 
 export default function SamplePage() {
   return (
-    <MainCard title="Dawg Stream" content={false}>
+    <MainCard title="Dawg Stream">
       <CardMedia>
       <header style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', marginBottom: '16px' }}>
           <img src={DawgStreamLogo.src} alt="Dawg Stream Logo" style={{ maxWidth: '10%', height: 'auto' }} />
