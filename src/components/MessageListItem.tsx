@@ -1,4 +1,6 @@
 import DeleteIcon from '@mui/icons-material/Delete';
+import BookIcon from '@mui/icons-material/Book';
+import Box from '@mui/material/Box';
 import CommentsDisabledIcon from '@mui/icons-material/CommentsDisabled';
 import { IconButton, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 
@@ -23,14 +25,19 @@ export function MessageListItem({ message, onDelete }: { message: IMessage; onDe
     </ListItem>
   );
 }
-export function BookListItem({ book, onDelete }: { book: IBook; onDelete: (isbn13: number) => void }) {
+export function BookListItem({ book, onDelete, onView }: { book: IBook; onDelete: (isbn13: number) => void, onView: (isbn13: number) => void}) {
   return (
     <ListItem
-      secondaryAction={
-        <IconButton edge="end" aria-label="delete" onClick={() => onDelete(book.isbn13)}>
-          <DeleteIcon />
-        </IconButton>
-      }
+    secondaryAction ={
+    <Box display="flex" flexDirection="column">
+    <IconButton aria-label="view" onClick={() => onView(book.isbn13)}>
+      <BookIcon />
+    </IconButton>
+    <IconButton aria-label="delete" onClick={() => onDelete(book.isbn13)}>
+      <DeleteIcon />
+    </IconButton>
+    </Box>
+    }
     >
     </ListItem>
   );

@@ -12,5 +12,5 @@ export interface IBook {
     rating_5_star: number,
     rating_avg: number,
     image_small_url: string,
-    image_large_url: string,
+    image_url: string,
   }
