@@ -1,6 +1,7 @@
 // material-ui
 import Typography from '@mui/material/Typography';
-
+import { CardMedia } from '@mui/material';
+import DawgStreamLogo from '/src/views/DawgStreamLogo.png';
 // project imports
 import MainCard from 'components/MainCard';
 
@@ -8,13 +9,18 @@ import MainCard from 'components/MainCard';
 
 export default function SamplePage() {
   return (
-    <MainCard title="Sample Card">
+    <MainCard title="Dawg Stream" content={false}>
+      <CardMedia>
+      <header style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', marginBottom: '16px' }}>
+          <img src={DawgStreamLogo.src} alt="Dawg Stream Logo" style={{ maxWidth: '10%', height: 'auto' }} />
+        </header>
       <Typography variant="body2">
-        Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif ad
-        minim venice, quin nostrum exercitation illampu laborings nisi ut liquid ex ea commons construal. Duos aube grue dolor in
-        reprehended in voltage veil esse colum doolie eu fujian bulla parian. Exceptive sin ocean cuspidate non president, sunk in culpa qui
-        officiate descent molls anim id est labours.
+      Where books flow as freely as ideas! 📚🐾Dive into a library like no other.<br></br><br></br> 
+      Whether you're hunting for your next great read or eager to share a hidden gem, 
+      Dawg Stream is your go-to spot for all things literary. <br></br>
+      Start exploring now—because every story deserves to be shared!
       </Typography>
+      </CardMedia>
     </MainCard>
   );
 }
