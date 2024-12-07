@@ -15,10 +15,10 @@ const icons = { ChromeOutlined };
 // ==============================|| MENU ITEMS - SAMPLE PAGE ||============================== //
 
 const samplePage: NavItemType = {
-  id: 'sample-page',
-  title: <FormattedMessage id="sample-page" />,
+  id: 'dashboard',
+  title: <FormattedMessage id="dashboard" />,
   type: 'group',
-  url: '/sample-page',
+  url: '/dashboard',
   icon: icons.ChromeOutlined
 };
 
