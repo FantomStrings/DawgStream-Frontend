@@ -33,7 +33,7 @@ const EMPTY_ALERT: IAlert = {
 export default function MessageSend() {
   //<PrioritySelector initialValue={priority} onClick={handlePriorityClick} /> 93
   //const [priority, setPriority] = React.useState(1);
-  
+  const [bookid, setBookid] = React.useState(0);
   const [isbn13, setIsbn13] = React.useState(0);
   const [title, setTitle] = React.useState(String);
   const [author, setAuthor] = React.useState(String);
@@ -64,7 +64,7 @@ export default function MessageSend() {
     });
   };
 
-  const handlePriorityClick = (event: React.MouseEvent<HTMLElement>, newPriority: number) => newPriority && setPriority(newPriority);
+  //const handlePriorityClick = (event: React.MouseEvent<HTMLElement>, newPriority: number) => newPriority && setPriority(newPriority);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -91,7 +91,7 @@ export default function MessageSend() {
           </Typography>
 
           <Box sx={{ mt: 1 }}>
-            <AddBook isbn13={isbn13} author={author} title={title} publicationYear={publicationYear}
+            <AddBook bookid={bookid} isbn13={isbn13} author={author} title={title} publicationYear={publicationYear}
             totalRatings={totalRatings} oneStar={oneStar} twoStar={twoStar} threeStar={threeStar}
             fourStar={fourStar} fiveStar={fiveStar} imageSmallURL={imageSmallURL}
             imageLargeURL={imageLargeURL} onSuccess={onSuccess} onError={onError} />

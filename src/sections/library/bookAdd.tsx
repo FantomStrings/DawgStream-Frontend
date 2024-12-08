@@ -21,7 +21,8 @@ import AnimateButton from 'components/@extended/AnimateButton';
 
 import axios from 'utils/axios';
 
-export default function AddBook({
+export default function AddBook({   
+  bookid,
   isbn13,
   title,
   author,
@@ -37,6 +38,7 @@ export default function AddBook({
   onSuccess,
   onError
 }: {
+  bookid: number;
   isbn13: number;
   title: String;
   author: String;
@@ -56,6 +58,7 @@ export default function AddBook({
     <>
       <Formik
         initialValues={{
+          bookid: null,
           isbn13: null,
           title: '',
           author: '',
@@ -71,6 +74,7 @@ export default function AddBook({
           submit: null
         }}
         validationSchema={Yup.object().shape({
+          bookid: Yup.number().required('book id is required'),
           isbn13: Yup.number().required('isbn13 is required'),
           title: Yup.string().max(255).required('Title is required'),
           Author: Yup.string().max(255).required('Author is required'),
@@ -80,15 +84,17 @@ export default function AddBook({
         })}
         onSubmit={(values, { setErrors, setSubmitting, setValues, resetForm }) => {
           console.dir(values);
+          console.log("submitted");
 
           axios
-            .post('c/message', { isbn13: values.isbn13, title: values.title, author: values.author, publicationYear: values.publicationYear,
-            totalRatings: values.totalRatings, oneStar: values.oneStar, twoStar: values.twoStar, threeStar: values.threeStar, fourStar: values.fourStar,
-            fiveStar: values.fiveStar, imageSmallURL: values.imageSmallURL, imageLargeURL: values.imageLargeURL})
+            .post('/addbook', { bookId: values.bookid, isbn: values.isbn13, title: values.title, author: values.author, year: values.publicationYear,
+            ratingCnt: values.totalRatings, oneStar: values.oneStar, twoStar: values.twoStar, threeStar: values.threeStar, fourStar: values.fourStar,
+            fiveStar: values.fiveStar, smallImageURL: values.imageSmallURL, imageURL: values.imageLargeURL})
             .then((response) => {
               setSubmitting(false);
               resetForm({
                 values: {
+                    bookid: null,
                     isbn13: null,
                     title: '',
                     author: '',
@@ -117,6 +123,27 @@ export default function AddBook({
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit}>
             <Grid container spacing={3}>
+            <Grid item xs={12}>
+                <Stack spacing={1}>
+                  <InputLabel htmlFor="id">Book id</InputLabel>
+                  <OutlinedInput
+                    id="sender-name"
+                    type="number"
+                    value={values.bookid}
+                    name="bookid"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    placeholder="Enter the book's id"
+                    fullWidth
+                    error={Boolean(touched.bookid && errors.bookid)}
+                  />
+                </Stack>
+                {touched.isbn13 && errors.isbn13 && (
+                  <FormHelperText error id="standard-weight-helper-text-name-message-send">
+                    {errors.isbn13}
+                  </FormHelperText>
+                )}
+              </Grid>
               <Grid item xs={12}>
                 <Stack spacing={1}>
                   <InputLabel htmlFor="isbn13">Book isbn13</InputLabel>
