@@ -176,7 +176,6 @@ export default function MessagesList() {
         </Typography>
       </Box>
       <BookListItem book={Book} onDelete={handleDelete} onView={handleDisplaySingleBook} />
-        {index < Books.length - 1 && <Divider variant="middle" component="li" />}
     </Box>
     {index < Books.length - 1 && <Divider variant="middle" component="li" />}
   </React.Fragment>
@@ -240,6 +239,13 @@ export default function MessagesList() {
 
           <Box sx={{ mt: 1 }}>
             <List>{booksAsComponents.length ? booksAsComponents : <NoBooks/>}</List>
+            { !searchQuery && hasMoreBooks && (
+              <Box textAlign="center" mt={2}>
+                <Button variant="contained" onClick={() => setPage((prev) => prev + 1)}>
+                   Load More
+                </Button>
+             </Box>
+            )}
           </Box>
         </Box>
         {/* Modal for Single Book */}

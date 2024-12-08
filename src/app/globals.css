@@ -1,6 +1,17 @@
 /* scroll bar */
 @import 'simplebar-react/dist/simplebar.min.css';
 
+/* Remove the default increase/decrease buttons */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield; 
+}
+
 .css-13ddxbb > * + * {
   margin: 0 !important;
 }

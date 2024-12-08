@@ -59,18 +59,18 @@ export default function AddBook({
     <>
       <Formik
         initialValues={{
-          bookid: 0,
-          isbn13: 0,
+          bookid: '',
+          isbn13: '',
           title: '',
           author: '',
-          publicationYear: 0,
-          totalRatings: 0,
+          publicationYear: '',
+          totalRatings: '',
           avgRating: '',
-          oneStar: 0,
-          twoStar: 0,
-          threeStar: 0,
-          fourStar: 0,
-          fiveStar: 0,
+          oneStar: '',
+          twoStar: '',
+          threeStar: '',
+          fourStar: '',
+          fiveStar: '',
           imageSmallURL: '',
           imageURL: '',
           submit: null
@@ -80,9 +80,10 @@ export default function AddBook({
           isbn13: Yup.number().required('isbn13 is required'),
           title: Yup.string().max(255).required('Title is required'),
           author: Yup.string().max(255).required('Author is required'),
+          avgRating: Yup.number(),
           publicationYear: Yup.number().required('publicationYear is required'),
-          imageSmallURL: Yup.string().max(255).required('image small URL is required'),
-          imageURL: Yup.string().max(255).required('image large URL is required'),
+          imageSmallURL: Yup.string().max(255).required('image small URL is required').matches(/^https?:\/\//, 'Must start with http:// or https://'),
+          imageURL: Yup.string().max(255).required('image large URL is required').matches(/^https?:\/\//, 'Must start with http:// or https://'),
         })}
         onSubmit={(values, { setErrors, setSubmitting, setValues, resetForm }) => {
           console.dir(values);
@@ -95,18 +96,18 @@ export default function AddBook({
               setSubmitting(false);
               resetForm({
                 values: {
-                    bookid: 0,
-                    isbn13: 0,
+                    bookid: '',
+                    isbn13: '',
                     title: '',
                     author: '',
                     avgRating: '',
-                    publicationYear: 0,
-                    totalRatings: 0,
-                    oneStar: 0,
-                    twoStar: 0,
-                    threeStar: 0,
-                    fourStar: 0,
-                    fiveStar: 0,
+                    publicationYear: '',
+                    totalRatings: '',
+                    oneStar: '',
+                    twoStar: '',
+                    threeStar: '',
+                    fourStar: '',
+                    fiveStar: '',
                     imageSmallURL: '',
                     imageURL: '',
                     submit: null
@@ -191,7 +192,7 @@ export default function AddBook({
               </Grid>
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="title">title</InputLabel>
+                  <InputLabel htmlFor="title">Title</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.title && errors.title)}
@@ -213,7 +214,7 @@ export default function AddBook({
 
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="author">author</InputLabel>
+                  <InputLabel htmlFor="author">Author</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.author && errors.author)}
@@ -235,7 +236,7 @@ export default function AddBook({
 
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="publicationYear">publicationYear</InputLabel>
+                  <InputLabel htmlFor="publicationYear">PublicationYear</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.publicationYear && errors.publicationYear)}
@@ -257,7 +258,7 @@ export default function AddBook({
 
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="totalRatings">totalRatings</InputLabel>
+                  <InputLabel htmlFor="totalRatings">TotalRatings</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.totalRatings && errors.totalRatings)}
@@ -279,7 +280,7 @@ export default function AddBook({
 
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="oneStar">oneStar</InputLabel>
+                  <InputLabel htmlFor="oneStar">One Stars</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.oneStar && errors.oneStar)}
@@ -301,7 +302,7 @@ export default function AddBook({
 
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="twoStar">twoStar</InputLabel>
+                  <InputLabel htmlFor="twoStar">Two Stars</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.twoStar && errors.twoStar)}
@@ -323,7 +324,7 @@ export default function AddBook({
 
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="threeStar">threeStar</InputLabel>
+                  <InputLabel htmlFor="threeStar">Three Stars</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.threeStar && errors.threeStar)}
@@ -345,7 +346,7 @@ export default function AddBook({
 
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="fourStar">fourStar</InputLabel>
+                  <InputLabel htmlFor="fourStar">Four Stars</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.fourStar && errors.fourStar)}
@@ -367,7 +368,7 @@ export default function AddBook({
 
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="fiveStar">fiveStar</InputLabel>
+                  <InputLabel htmlFor="fiveStar">Five Stars</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.fiveStar && errors.fiveStar)}
@@ -389,7 +390,7 @@ export default function AddBook({
 
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="imageSmallURL">imageSmallURL
+                  <InputLabel htmlFor="imageSmallURL">Small image URL
             </InputLabel>
                   <OutlinedInput
                     fullWidth
@@ -402,7 +403,7 @@ export default function AddBook({
                     name="imageSmallURL"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="Enter the book's imageSmallURL"
+                    placeholder="Enter the book's Small image URL"
                   />
                 </Stack>
                 {touched.imageSmallURL
@@ -417,7 +418,7 @@ export default function AddBook({
 
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="imageURL">imageURL</InputLabel>
+                  <InputLabel htmlFor="imageURL">Large image URL</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.imageURL && errors.imageURL)}
@@ -427,7 +428,7 @@ export default function AddBook({
                     name="imageURL"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="Enter the book's imageURL"
+                    placeholder="Enter the book's Large image URL"
                   />
                 </Stack>
                 {touched.imageURL && errors.imageURL && (
@@ -445,7 +446,7 @@ export default function AddBook({
               <Grid item xs={12}>
                 <AnimateButton>
                   <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
-                    SEND!
+                    ADD BOOK!
                   </Button>
                 </AnimateButton>
               </Grid>

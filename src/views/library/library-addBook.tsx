@@ -49,7 +49,7 @@ export default function MessageSend() {
   const onSuccess = () => {
     setAlert({
       showAlert: true,
-      alertMessage: 'The message was sent!',
+      alertMessage: 'Book was added!',
       alertSeverity: 'success'
     });
   };
@@ -57,7 +57,7 @@ export default function MessageSend() {
   const onError = (message: string) => {
     setAlert({
       showAlert: true,
-      alertMessage: 'Message NOT sent! Error: ' + message,
+      alertMessage: 'Book could not be added! Error: ' + message,
       alertSeverity: 'error'
     });
   };
@@ -67,9 +67,19 @@ export default function MessageSend() {
   return (
     <ThemeProvider theme={defaultTheme}>
       {alert.showAlert && (
+        <div 
+        style={{
+          position: 'fixed',
+          top: '20px',
+          left: '60%',
+          transform: 'translateX(-50%)',
+          zIndex: 9999
+        }}
+        >
         <Alert severity={alert.alertSeverity as any} onClose={() => setAlert(EMPTY_ALERT)}>
           {alert.alertMessage}
         </Alert>
+        </div>
       )}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
