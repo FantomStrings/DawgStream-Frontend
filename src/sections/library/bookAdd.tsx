@@ -64,24 +64,30 @@ export default function AddBook({
           title: '',
           author: '',
           publicationYear: '',
-          totalRatings: '',
+          totalRatings: 0,
           avgRating: '',
-          oneStar: '',
-          twoStar: '',
-          threeStar: '',
-          fourStar: '',
-          fiveStar: '',
+          oneStar: 0,
+          twoStar: 0,
+          threeStar: 0,
+          fourStar: 0,
+          fiveStar: 0,
           imageSmallURL: '',
           imageURL: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
-          bookid: Yup.number().required('book id is required'),
-          isbn13: Yup.number().required('isbn13 is required'),
+          bookid: Yup.number().required('Book id is required'),
+          isbn13: Yup.number().required('Isbn13 is required'),
           title: Yup.string().max(255).required('Title is required'),
           author: Yup.string().max(255).required('Author is required'),
-          avgRating: Yup.number(),
-          publicationYear: Yup.number().required('publicationYear is required'),
+          totalRatings: Yup.number().required('This field can not be left Empty'),
+          avgRating: Yup.number().required('Average Rating is reqiured'),
+          publicationYear: Yup.number().required('PublicationYear is required').min(1000, 'Must be 4 digits').max(9999, 'Must be 4 digits'),
+          oneStar: Yup.number().required('This field can not be left Empty'),
+          twoStar: Yup.number().required('This field can not be left Empty'),
+          threeStar: Yup.number().required('This field can not be left Empty'),
+          fourStar: Yup.number().required('This field can not be left Empty'),
+          fiveStar: Yup.number().required('This field can not be left Empty'),
           imageSmallURL: Yup.string().max(255).required('image small URL is required').matches(/^https?:\/\//, 'Must start with http:// or https://'),
           imageURL: Yup.string().max(255).required('image large URL is required').matches(/^https?:\/\//, 'Must start with http:// or https://'),
         })}
@@ -102,12 +108,12 @@ export default function AddBook({
                     author: '',
                     avgRating: '',
                     publicationYear: '',
-                    totalRatings: '',
-                    oneStar: '',
-                    twoStar: '',
-                    threeStar: '',
-                    fourStar: '',
-                    fiveStar: '',
+                    totalRatings: 0,
+                    oneStar: 0,
+                    twoStar: 0,
+                    threeStar: 0,
+                    fourStar: 0,
+                    fiveStar: 0,
                     imageSmallURL: '',
                     imageURL: '',
                     submit: null
@@ -132,7 +138,7 @@ export default function AddBook({
                   <InputLabel htmlFor="id">Book id</InputLabel>
                   <OutlinedInput
                     id="bookid"
-                    type="number"
+                    type="text"
                     value={values.bookid}
                     name="bookid"
                     onBlur={handleBlur}
@@ -142,9 +148,9 @@ export default function AddBook({
                     error={Boolean(touched.bookid && errors.bookid)}
                   />
                 </Stack>
-                {touched.isbn13 && errors.isbn13 && (
+                {touched.bookid && errors.bookid && (
                   <FormHelperText error id="standard-weight-helper-text-name-message-send">
-                    {errors.isbn13}
+                    {errors.bookid}
                   </FormHelperText>
                 )}
               </Grid>
@@ -153,7 +159,7 @@ export default function AddBook({
                   <InputLabel htmlFor="isbn13">Book isbn13</InputLabel>
                   <OutlinedInput
                     id="isbn13"
-                    type="number"
+                    type="text"
                     value={values.isbn13}
                     name="isbn13"
                     onBlur={handleBlur}
@@ -241,7 +247,7 @@ export default function AddBook({
                     fullWidth
                     error={Boolean(touched.publicationYear && errors.publicationYear)}
                     id="publicationYear"
-                    type="number"
+                    type="text"
                     value={values.publicationYear}
                     name="publicationYear"
                     onBlur={handleBlur}
@@ -258,17 +264,17 @@ export default function AddBook({
 
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="totalRatings">TotalRatings</InputLabel>
+                  <InputLabel htmlFor="totalRatings">Total Rating Count</InputLabel>
                   <OutlinedInput
                     fullWidth
                     error={Boolean(touched.totalRatings && errors.totalRatings)}
                     id="totalRatings"
-                    type="number"
+                    type="text"
                     value={values.totalRatings}
                     name="totalRatings"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="Enter the book's totalRatings"
+                    placeholder="Enter the book's total Rating count"
                   />
                 </Stack>
                 {touched.totalRatings && errors.totalRatings && (
@@ -285,7 +291,7 @@ export default function AddBook({
                     fullWidth
                     error={Boolean(touched.oneStar && errors.oneStar)}
                     id="oneStar"
-                    type="number"
+                    type="text"
                     value={values.oneStar}
                     name="oneStar"
                     onBlur={handleBlur}
@@ -307,7 +313,7 @@ export default function AddBook({
                     fullWidth
                     error={Boolean(touched.twoStar && errors.twoStar)}
                     id="twoStar"
-                    type="number"
+                    type="text"
                     value={values.twoStar}
                     name="twoStar"
                     onBlur={handleBlur}
@@ -329,7 +335,7 @@ export default function AddBook({
                     fullWidth
                     error={Boolean(touched.threeStar && errors.threeStar)}
                     id="threeStar"
-                    type="number"
+                    type="text"
                     value={values.threeStar}
                     name="threeStar"
                     onBlur={handleBlur}
@@ -351,7 +357,7 @@ export default function AddBook({
                     fullWidth
                     error={Boolean(touched.fourStar && errors.fourStar)}
                     id="fourStar"
-                    type="number"
+                    type="text"
                     value={values.fourStar}
                     name="fourStar"
                     onBlur={handleBlur}
@@ -373,7 +379,7 @@ export default function AddBook({
                     fullWidth
                     error={Boolean(touched.fiveStar && errors.fiveStar)}
                     id="fiveStar"
-                    type="number"
+                    type="text"
                     value={values.fiveStar}
                     name="fiveStar"
                     onBlur={handleBlur}
